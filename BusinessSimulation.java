@@ -20,8 +20,8 @@ public abstract class BusinessSimulation {
 	protected int seed;
 
 	/* Used to bound the range of service times that Customers require */
-	public static final int MIN_SERVICE_TIME = -1; //TODO: set appropraitely
-	public static final int MAX_SERVICE_TIME = -1; //TODO: set appropriately
+	public static final int MIN_SERVICE_TIME = 5; //TODO: set appropraitely
+	public static final int MAX_SERVICE_TIME = 20; //TODO: set appropriately
 
 	/**
 	 * Creates a BusinessSimulation.
@@ -33,7 +33,15 @@ public abstract class BusinessSimulation {
 	 * @param seed used to seed a Random() so that simulation is repeatable.
 	 */
 	public BusinessSimulation(int numCustomers, int numServicePoints,
-				  int maxEventStart, int seed) { }
+				  int maxEventStart, int seed) {
+						this.servicePoints = new Vector<Queue<Customer>>();
+						for(int i=0; i<numServicePoints; i++) {
+							this.servicePoints.add(new QueueList());
+						}
+						this.eventQueue=generateCustomerSequence(numCustomers, maxEventStart, seed);
+						this.time=0;
+						this.seed=seed;
+				}
 
 	/**
 	 * Generates a sequence of Customer objects, stored in a PriorityQueue.
@@ -48,10 +56,14 @@ public abstract class BusinessSimulation {
 	 *         ordered by Customer arrival time
 	 */
 	public static PriorityQueue<Customer> generateCustomerSequence(int numCustomers,
-								       int maxEventStart,
-								       int seed) {
-		//TODO: complete this method
-		return null;
+								       int maxEventStart, int seed) {
+												 Random rnd = new Random(seed);
+						PriorityQueue<Customer> line = new VectorHeap<Customer>();
+						for(int i=0; i<numCustomers; i++) {
+							line.add(new Customer((int)(rnd.nextInt()) * maxEventStart,
+							(int)(rnd.nextInt() * (MAX_SERVICE_TIME - MIN_SERVICE_TIME)) + MAX_SERVICE_TIME));
+						}
+						return line;
 	}
 
 	/**

@@ -5,9 +5,8 @@ import structure5.*;
  */
 public class Customer implements Comparable<Customer> {
 
-	// TODO: Implement this class, adding member variables,
-	// methods, and pre/post conditions as needed.
-	// When you are done, please remove all completed TODO comments.
+	private int eventTime;
+	private int serviceTime;
 
 	/**
 	 * Creates a Customer that arrives at time step @eventTime and
@@ -18,14 +17,25 @@ public class Customer implements Comparable<Customer> {
 	 * @param serviceTime number of time steps required to service this
 	 *        Customer.
 	 */
-	public Customer(int eventTime, int serviceTime) { }
+	public Customer(int eventTime, int serviceTime) {
+		this.eventTime=eventTime;
+		this.serviceTime=serviceTime;
+	 }
 
 	/**
 	 * Compares Customers by arrival time
 	 * @param other Customer to compare against this.
 	 */
 	public int compareTo(Customer other) {
-		return 0;
+		return other.eventTime-this.eventTime;
+	}
+
+	public int getEventTime() {
+		return eventTime;
+	}
+
+	public int getServiceTime() {
+		return serviceTime;
 	}
 
 	public String toString() {
