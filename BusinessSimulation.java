@@ -30,14 +30,12 @@ public abstract class BusinessSimulation {
 	 * Creates a BusinessSimulation.
 	 * @post the step() function may be called.
 	 *
-	 * @param numCustomers number of random customers that appear in the simulation
+	 * @param numCustomers number of randomly generated customers that appear in the simulation
 	 * @param numSerivicePoints number of tellers in this simulation
 	 * @param maxEventStart latest timeStep that a Customer may appear in the simulation
 	 * @param seed used to seed a Random() so that simulation is repeatable.
 	 */
-
-	public BusinessSimulation(int numCustomers, int numServicePoints,
-				  int maxEventStart, int seed) {
+	public BusinessSimulation(int numCustomers, int numServicePoints, int maxEventStart, int seed) {
 						this.servicePoints = new Vector<Queue<Customer>>();
 						for(int i=0; i<numServicePoints; i++) {
 							this.servicePoints.add(new QueueList<Customer>());
