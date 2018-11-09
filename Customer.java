@@ -19,7 +19,6 @@ public class Customer implements Comparable<Customer> {
 	 *        Customer.
 	 */
 	public Customer(int eventTime, int serviceTime) { }
-
 	/**
 	 * Compares Customers by arrival time
 	 * @param other Customer to compare against this.
@@ -27,7 +26,6 @@ public class Customer implements Comparable<Customer> {
 	public int compareTo(Customer other) {
 		return 0;
 	}
-
 	public String toString() {
 		return "";
 	}
