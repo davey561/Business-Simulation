@@ -36,13 +36,14 @@ public abstract class BusinessSimulation {
 	 * @param seed used to seed a Random() so that simulation is repeatable.
 	 */
 	public BusinessSimulation(int numCustomers, int numServicePoints, int maxEventStart, int seed) {
-						this.servicePoints = new Vector<Queue<Customer>>();
-						for(int i=0; i<numServicePoints; i++) {
-							this.servicePoints.add(new QueueList<Customer>());
+						this.servicePoints = new Vector<Queue<Customer>>(); //a vector of service points, the line of each of which is represented by a queue of Customer objects
+						//for each service point (ie for each line)
+						for(int i = 0; i<numServicePoints; i++) {
+							this.servicePoints.add(new QueueList<Customer>()); //initialize the given line as a Queue of customers
 						}
-						this.eventQueue=generateCustomerSequence(numCustomers, maxEventStart, seed);
-						this.time=0;
-						this.seed=seed;
+						this.eventQueue = generateCustomerSequence(numCustomers, maxEventStart, seed); //generate the queue of events. an event is a customer entering the store at a specific time
+						this.time = 0; //initialize time as 0
+						this.seed = seed;
 				}
 
 	/**
@@ -52,57 +53,36 @@ public abstract class BusinessSimulation {
 	 * @param maxEventStart maximum timeStep that a customer arrives
 	 *      in @eventQueue
 	 * @param seed use Random(seed) to make customer sequence repeatable
-
 	 * @pre
-
 	 * @post
-
 	 * @return A PriorityQueue that represents Customer arrivals,
-
 	 *         ordered by Customer arrival time
-
 	 */
 
-	public static PriorityQueue<Customer> generateCustomerSequence(int numCustomers,
-
-								       int maxEventStart, int seed) {
-
-												 Random rnd = new Random(seed);
-
-						PriorityQueue<Customer> line = new VectorHeap<Customer>();
-
-						for(int i=0; i<numCustomers; i++) {
-
-							line.add(new Customer(
-								(int)(rnd.nextDouble() * maxEventStart),
-								(int)(rnd.nextDouble() * (MAX_SERVICE_TIME - MIN_SERVICE_TIME)) + MIN_SERVICE_TIME
-							));
-						}
-
-						return line;
-
+	public static PriorityQueue<Customer> generateCustomerSequence(int numCustomers, int maxEventStart, int seed) {
+		Random rnd = new Random(seed); //random generator
+		PriorityQueue<Customer> line = new VectorHeap<Customer>(); //the preloaded 'line of customers' to enter the stored
+			//using a type of PriorityQueue (here, VectorHeap) because it can remove values in increasing order, which is exactly what we need for customers arriving at a store
+		for(int i=0; i<numCustomers; i++) {
+			line.add(new Customer(
+				(int)(rnd.nextDouble() * maxEventStart),
+				(int)(rnd.nextDouble() * (MAX_SERVICE_TIME - MIN_SERVICE_TIME)) + MIN_SERVICE_TIME
+			));
+		}
+		return line;
 	}
 
 
 	/**
-
 	 * Advances 1 time step through the simulation.
-
 	 *
-
 	 * @post the simulation has advanced 1 time step
-
 	 * @return true if the simulation is over, false otherwise
-
 	 */
 
 	abstract public boolean step();
-
-
 	/**
-
 	 * @return a string representation of the simulation
-
 	 */
 
 	public String toString() {
@@ -113,25 +93,19 @@ public abstract class BusinessSimulation {
 		str = str + "Event Queue: ";
 		if (eventQueue != null) {
 			str = str + eventQueue.toString();
-
 		}
-
 		str = str + "\n";
-
-
 		if (servicePoints != null)  {
 
 			for (Queue<Customer> sp : servicePoints) {
-
 				str = str + "Service Point: " + sp.toString() + "\n";
-
 			}
-
 		}
-
-
 		return str;
 
+	}
+	public void print(){
+		System.out.println(this.toString());
 	}
 
 }

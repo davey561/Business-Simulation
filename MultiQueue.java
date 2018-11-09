@@ -4,33 +4,22 @@ public class MultiQueue extends BusinessSimulation {
 
 
   public static void main(String[] args) {
-
     MultiQueue store;
-
     if(args.length==0)
-
       store= new MultiQueue(100, 4, 300, 0);
-
     else {
-
       Assert.pre(args.length==4, "Constructor takes: int numCustomers, int numServicePoints, int maxEventStart, int seed");
-
-    store = new MultiQueue(Integer.parseInt(args[0]), Integer.parseInt(args[1]),
-
-    Integer.parseInt(args[2]), Integer.parseInt(args[3]));
-
+      store = new MultiQueue(Integer.parseInt(args[0]), Integer.parseInt(args[1]), Integer.parseInt(args[2]), Integer.parseInt(args[3]));
     }
-
+    do{
+      store.print();
+    } while(!store.step());
   }
 
 
-  public MultiQueue(int numCustomers, int numServicePoints,
-
-        int maxEventStart, int seed) {
-
-        super(numCustomers, numServicePoints, maxEventStart, seed);
-
-        }
+  public MultiQueue(int numCustomers, int numServicePoints, int maxEventStart, int seed) {
+      super(numCustomers, numServicePoints, maxEventStart, seed);
+  }
   /**
   * Increments time and simulates what will happen in this next step of service-customer business
   * pre:
@@ -38,6 +27,7 @@ public class MultiQueue extends BusinessSimulation {
   * @return true if the event queue is empty (if no more customers are arriving); false if there are potentially more customers coming
   */
   public boolean step() {
+    Customer temp;
     //if there aren't any more customers, return true to abort business simulation
     if(eventQueue.isEmpty()) return true;
     //while the person at front of line is entering now.
@@ -47,9 +37,12 @@ public class MultiQueue extends BusinessSimulation {
     }
     //for every line of customers
     for(int i = 0; i<servicePoints.size(); i++){
-        //if that customer has been served fully
-        if(time-servicePoints.get(i).getFirst().getEventTime()-servicePoints.get(i).getFirst().getServiceTime()==0){
-          servicePoints.get(i).remove(); //remove them from line if they've been served
+        if(!servicePoints.get(i).isEmpty()){
+          temp = servicePoints.get(i).get();
+          //if that customer has been served fully
+          if(time-temp.getEventTime()-temp.getServiceTime()==0){
+            servicePoints.get(i).remove(); //remove them from line if they've been served
+          }
         }
       }
       time++; //increment time
