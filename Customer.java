@@ -1,5 +1,5 @@
 import structure5.*;
- 
+
 /**
  * TODO: class description here.
  */
@@ -37,7 +37,6 @@ public class Customer implements Comparable<Customer> {
 	public int getServiceTime() {
 		return serviceTime;
 	}
-
 	public String toString() {
 		return "";
 	}
