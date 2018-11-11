@@ -57,7 +57,7 @@ public class MultiQueue extends BusinessSimulation {
       }
     }
     //if all lines are empty
-    if(!hasNext){
+    if(!hasNext && eventQueue.isEmpty()){
       System.out.println("returning false at " + time);
       return false;
     }

@@ -1,6 +1,7 @@
 import java.util.Vector;
 
 import java.util.Random;
+import java.util.Scanner;
 
 import structure5.*;
 
@@ -117,19 +118,30 @@ public abstract class BusinessSimulation {
 		System.out.println(this.toString());
 	}
 	public static void main(String[] args) {
+		Scanner scan = new Scanner(System.in);
+		boolean multi;
 		int numCustomers = 10; //number of customers
     int numServicePoints = 2; //number of service points (i.e. lines)
     int maxEventStart = 8; //last time a customer can enter a store
     int seed = 0; //for the Random generator
 
-    //Read in arguments from command line (String [] args)
-    if(args.length>0){
-      Assert.pre(args.length==4, "Constructor takes: int numCustomers, int numServicePoints, int maxEventStart, int seed");
+
+    Assert.pre(args.length>0, "Business Simulation main method requires at least one argument (indicating whether to simulate one service point or multiple service points.");
+		//look at first argument, indicates whether multi or one Queue
+			//give some flexibility to user by only requiring input to contain the first letter (One queue might also be called Single queue)
+		String type = args[0].toLowerCase();
+		if(type.contains("m")) multi=true;
+		else if(type.contains("s") || type.contains("o")) multi=false;
+		else Assert.fail("need to indicate either 'multi' or 'one' as first argument of the command line");
+
+		//if user chooses to include the rest of the necessary arguments
+    if(args.length>1){
+      Assert.pre(args.length==5, "Either input only one argument ('multi' or 'one') or you also input the other four arguments for the simulation to override the defaults: \n1) the number of customers, \n2) the number of service points, \n3) the last time at which you'd like the costumers to arrive at the store, \n4) seed (for Random).");
       try{
-        numCustomers = Integer.parseInt(args[0]);
-        numServicePoints = Integer.parseInt(args[1]);
-        maxEventStart = Integer.parseInt(args[2]);
-        seed = Integer.parseInt(args[3]);
+        numCustomers = Integer.parseInt(args[1]);
+        numServicePoints = Integer.parseInt(args[2]);
+        maxEventStart = Integer.parseInt(args[3]);
+        seed = Integer.parseInt(args[4]);
       }
       catch(Exception e){
         System.out.println("At least one four numbers input in command line cannot be rendered as an int");
