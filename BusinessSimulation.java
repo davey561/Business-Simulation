@@ -116,5 +116,4 @@ public abstract class BusinessSimulation {
 	public void print(){
 		System.out.println(this.toString());
 	}
-
 }
