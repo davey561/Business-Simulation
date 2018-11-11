@@ -8,44 +8,6 @@ public class MultiQueue extends BusinessSimulation {
   int [] start_times; //Each index corresponds to a service point; each int is the time at which the customer currently being served in that line started being served
   int wait_time; //the sum of all wait times of the customers, to be divided by the total number of customers before returned
 
-  /**
-    * Main method runs MultiQueue simulation
-    *
-    *
-    *
-    */
-  public static void main(String[] args) {
-    int numCustomers = 10; //number of customers
-    int numServicePoints = 2; //number of service points (i.e. lines)
-    int maxEventStart = 8; //last time a customer can enter a store
-    int seed = 0; //for the Random generator
-
-    //Read in arguments from command line (String [] args)
-    if(args.length>0){
-      Assert.pre(args.length==4, "Constructor takes: int numCustomers, int numServicePoints, int maxEventStart, int seed");
-      try{
-        numCustomers = Integer.parseInt(args[0]);
-        numServicePoints = Integer.parseInt(args[1]);
-        maxEventStart = Integer.parseInt(args[2]);
-        seed = Integer.parseInt(args[3]);
-      }
-      catch(Exception e){
-        System.out.println("At least one four numbers input in command line cannot be rendered as an int");
-      }
-    }
-
-    System.out.println("int numCustomers, int numServicePoints, int maxEventStart are: " + numCustomers + ", " + numServicePoints + ", " + maxEventStart);
-
-    //Instantiate a MultiQueue
-    MultiQueue mq= new MultiQueue(numCustomers, numServicePoints, maxEventStart, seed);
-    //Print multiqueue for every time step
-    do{
-       mq.print();
-    } while(mq.step());
-
-    System.out.println("Multiple Service Point Simulation with " + numCustomers + " customers, " + numServicePoints + " lines, and time " + maxEventStart + " as the last time a customer can enter before store closes. \nTime = " + mq.getTime() + ". \nAverage wait time = " + (mq.getWaitTime())/numCustomers + ".");
-  }
-
 
   public MultiQueue(int numCustomers, int numServicePoints, int maxEventStart, int seed) {
       super(numCustomers, numServicePoints, maxEventStart, seed);
