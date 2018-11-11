@@ -41,6 +41,7 @@ public abstract class BusinessSimulation {
 						for(int i = 0; i<numServicePoints; i++) {
 							this.servicePoints.add(new QueueList<Customer>()); //initialize the given line as a Queue of customers
 						}
+						System.out.println("about to generate sequence");
 						this.eventQueue = generateCustomerSequence(numCustomers, maxEventStart, seed); //generate the queue of events. an event is a customer entering the store at a specific time
 						this.time = 0; //initialize time as 0
 						this.seed = seed;
@@ -61,15 +62,23 @@ public abstract class BusinessSimulation {
 
 	public static PriorityQueue<Customer> generateCustomerSequence(int numCustomers, int maxEventStart, int seed) {
 		Random rnd = new Random(seed); //random generator
-		PriorityQueue<Customer> line = new VectorHeap<Customer>(); //the preloaded 'line of customers' to enter the stored
+		PriorityQueue<Customer> line = new VectorHeap<Customer>(); //will store the preloaded 'line of customers' to enter the stored
 			//using a type of PriorityQueue (here, VectorHeap) because it can remove values in increasing order, which is exactly what we need for customers arriving at a store
+		//for each customer-to-be-generated
 		for(int i=0; i<numCustomers; i++) {
-			line.add(new Customer(
+			//add new customer
+			Customer temp =
+			new Customer(
 				(int)(rnd.nextDouble() * maxEventStart),
 				(int)(rnd.nextDouble() * (MAX_SERVICE_TIME - MIN_SERVICE_TIME)) + MIN_SERVICE_TIME
-			));
+			);
+			line.add(temp);
 		}
 		return line;
+	}
+
+	public int getTime(){
+		return this.time;
 	}
 
 

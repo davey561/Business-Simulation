@@ -27,7 +27,7 @@ public class Customer implements Comparable<Customer> {
 	 * @param other Customer to compare against this.
 	 */
 	public int compareTo(Customer other) {
-		return other.eventTime-this.eventTime;
+		return this.eventTime-other.eventTime; //this order is important--lower value--> higher priority
 	}
 
 	public int getEventTime() {
@@ -38,6 +38,6 @@ public class Customer implements Comparable<Customer> {
 		return serviceTime;
 	}
 	public String toString() {
-		return "";
+		return ("<Customer| event time: " + eventTime + ", service time: " + serviceTime + ">\n");
 	}
 }
