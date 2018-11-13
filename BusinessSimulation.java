@@ -6,6 +6,7 @@ import structure5.*;
 /**
  * BusinessSimulation provides the overarching methods for simulating the lines of a store as customers arrive and leave and tellers attend to customers and wait for new ones.
  * The two class's two children are simulate two different store-policies of how lines should form: MultiQueue and OneQueue
+ * To run the similation from command-line, should call BusinessSimulation, followed by the necessary arguments
  * @author Davey Morse
  * @author Stephen Willis
  */
@@ -27,10 +28,6 @@ public abstract class BusinessSimulation {
 	/* Used to bound the range of service times that Customers require */
 	public static final int MIN_SERVICE_TIME = 5; //TODO: set appropraitely
 	public static final int MAX_SERVICE_TIME = 20; //TODO: set appropriately
-
-	//keep track of when each line's first customer started being served.
-  //protected int [] start_times; //Each index corresponds to a service point; each int is the time at which the customer currently being served in that line started being served
-  //protected int wait_time; //the sum of all wait times of the customers, to be divided by the total number of customers before returned
 
 	/**
 	 * Creates a BusinessSimulation.
@@ -68,7 +65,6 @@ public abstract class BusinessSimulation {
 	 * @return A PriorityQueue that represents Customer arrivals,
 	 *         ordered by Customer arrival time
 	 */
-
 	public static PriorityQueue<Customer> generateCustomerSequence(int numCustomers, int maxEventStart, int seed) {
 		Random rnd = new Random(seed); //random generator
 		PriorityQueue<Customer> line = new VectorHeap<Customer>(); //will store the preloaded 'line of customers' to enter the stored
@@ -89,12 +85,19 @@ public abstract class BusinessSimulation {
 
 
 	/**
-	 * Does what is unique to the specific setup of the store
+	 * Does what is unique to the specific setup of the store in moving customers from line to being served by tellers, and indicating when there are no more customers in line
 	 *
 	 * @post the simulation has advanced 1 time step
-	 * @return true if the simulation is over, false otherwise
+	 * @return true if the simulation is continuing, false if there are no more customers in line or being served
 	 */
 	abstract public boolean unique(int i);
+
+	/**
+	 * Does what is unique to the specific setup of the store in moving customers from the pre-generated list to the actual line in the store
+	 *
+	 * @post: the simulation has advanced 1 time step
+	 * @return true if the simulation is over, false otherwise
+	 */
 	abstract public void add(Customer c);
 
 
@@ -121,10 +124,15 @@ public abstract class BusinessSimulation {
 		return str;
 
 	}
+	/**
+		*Prints a string representation of this
+		*/
 	public void print(){
 		System.out.println(this.toString());
 	}
-
+	/**
+		* this method simulates the store
+		*/
 	public static void main(String[] args) {
 		boolean multi=false;
 		int numCustomers = 10; //number of customers
@@ -132,7 +140,7 @@ public abstract class BusinessSimulation {
     int maxEventStart = 8; //last time a customer can enter a store
     int seed = 0; //for the Random generator
 
-		//Processing arguments.
+		//PROCESSING ARGUMENTS
     Assert.pre(args.length>0, "Business Simulation main method requires at least one argument (indicating whether to simulate one service point or multiple service points.");
 		//look at first argument, indicates whether multi or one Queue
 			//give some flexibility to user by only requiring input to contain the first letter (One queue might also be called Single queue)
@@ -154,17 +162,19 @@ public abstract class BusinessSimulation {
         System.out.println("At least one four numbers input in command line cannot be rendered as an int");
       }
     }
-    //System.out.println("int numCustomers, int numServicePoints, int maxEventStart are: " + numCustomers + ", " + numServicePoints + ", " + maxEventStart);
 
+		//CONSTRUCTING SIMULATION
 		//Instantiate a Queue
 		BusinessSimulation bs;
 		if(multi) bs = new MultiQueue(numCustomers, numServicePoints, maxEventStart, seed);
 		else bs = new OneQueue(numCustomers, numServicePoints, maxEventStart, seed);
-    //Print multiqueue for every time step
+    //Print multiqueue for every time step (step is the important function here)
     while(step(bs)){
 			bs.print();
 		};
 
+		//PRINTING RESULTS
+		//All for output
 		String output;
 		if(multi) output = "Multiple Service-Point";
 		else output = "Single Line";
@@ -175,7 +185,6 @@ public abstract class BusinessSimulation {
 			sum+=getCustomerList().get(i).getWaitTime();
 		}
 		double ave= sum/ (double) numCustomers;
-
 	  System.out.println(output + " Simulation with " + numCustomers + " customers, " + numServicePoints + " lines, and time " + maxEventStart + " as the last time a customer can enter before store closes. \nTime = " + bs.getTime() + ". \nAverage wait time = " + ave + ".");
 	}
 	/**
@@ -190,13 +199,8 @@ public abstract class BusinessSimulation {
 
 		bs.incrementTime(); //increment time
     //while earliest person is entering now
-    // System.out.println("event time of current first customer: " +  eventQueue.getFirst().getEventTime());
     while (!bs.eventQueue.isEmpty()&& (bs.eventQueue.getFirst().getEventTime()==bs.getTime())){
-      //System.out.println("in while loop, event time of current guy being examined: "+ bs.getEventQueue().getFirst().getEventTime());
       //Add the given customer to the event queue, using add() method internal to this class,
-        //simultaneously remove that customer from the eventQueue
-      // System.out.println("adding next person on event cue: " + eventQueue.getFirst().getEventTime() + ", servicetime: " + eventQueue.getFirst().getServiceTime());
-			//if(bs.eventQueue.getFirst().getEventTime()==bs.getTime())
       	bs.add(bs.getEventQueue().remove());
     }
     hasNext = false;
@@ -205,20 +209,14 @@ public abstract class BusinessSimulation {
 		for(int i = 0; i<bs.getServicePoints().size(); i++){
 			//if the line is not empty
       if(!bs.getServicePoints().get(i).isEmpty()){
-				// bs.unique(i); //run operations unique to specific type of simulation
-				// //if line is still non-empty
-        // if(!bs.getServicePoints().get(i).isEmpty()) hasNext = true;
-				// else System.out.println("213, at time: " + bs.getTime())
 
-				//run operations unique to specific type of simulation
+				//Run operations unique to specific type of simulation.
 				//if line is still non-empty
 				if(bs.unique(i)) hasNext = true;
-				else System.out.println("213, at time: " + bs.getTime());
 			}
 		}
 		//if all lines are empty (and in onequeue, if no one is "being_served")
     if(!hasNext && bs.getEventQueue().isEmpty()){
-      System.out.println("returning false at " + bs.getTime());
       return false;
     }
     return true; //indicates that business simulation should continue (because there are potentially more customers that will need to be served)

@@ -41,7 +41,7 @@ public class OneQueue extends BusinessSimulation {
       int t = temp.getServiceBegins();
       System.out.println("Customer being served " + temp.toString());
       if(getTime() - temp.getServiceBegins()>=temp.getServiceTime()){
-       
+
           being_served.remove(temp);
         // System.out.println("Line: " + line.toString() + "\n| customer to remove: " + temp.toString());
 

@@ -1,5 +1,10 @@
-Incomplete assignment, late day requested.
+We are the sole authors of all codes in this the classes: BusinessSimulation, Customer, OneQueue, MultiQueue.
 # Lab 8: Waiting in Line
+* BusinessSimulation is the central (abstract) class of the store simulation. It contains all of the code common to both types of simulations. Its main method runs the simulation, its step method increments time and calls on the necessary functions that are unique to each kind of simulations
+* MultiQueue and OneQueue contain the methods necessary to simulate a store with multiple lines and a teller per each and a store with a single line where all the tellers are, respectively. They each have a unique() method, which deals with moving customers from waiting in line to being served by a teller, and deals with removing customers after they've been fully served, and a add() method, which moves customers from the pre-generated list to the line(s) in the store.
+* Customer is the class that contains the necessary characteristics of a customer: a time at which they enter the store (eventTime), a length of time necessary for them to be fully served (serviceTime), as well as the time at which they begin to be served (serviceBegins) and a time length for which they waited in line before being served (waitTime). waitTime is the difference in time between when their serviceBegins and when the entered the store.
+
+
 
 ## Useful Links
  * [Course Homepage](http://cs.williams.edu/~cs136/index.html) (with TA schedule)
