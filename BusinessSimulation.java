@@ -1,7 +1,5 @@
 import java.util.Vector;
-
 import java.util.Random;
-
 import structure5.*;
 
 
@@ -27,8 +25,8 @@ public abstract class BusinessSimulation {
 	/* seed for Random() so that simulation is repeatable */
 	protected int seed;
 	/* Used to bound the range of service times that Customers require */
-	public static final int MIN_SERVICE_TIME = 5; //TODO: set appropraitely
-	public static final int MAX_SERVICE_TIME = 20; //TODO: set appropriately
+	public static final int MIN_SERVICE_TIME = 1; //TODO: set appropraitely
+	public static final int MAX_SERVICE_TIME = 4; //TODO: set appropriately
 
 	//keep track of when each line's first customer started being served.
   //protected int [] start_times; //Each index corresponds to a service point; each int is the time at which the customer currently being served in that line started being served
@@ -48,10 +46,7 @@ public abstract class BusinessSimulation {
 						this.numCustomers = numCustomers;
 						this.servicePoints = new Vector<Queue<Customer>>(); //a vector of service points, the line of each of which is represented by a queue of Customer objects
 						this.customerList = new Vector<Customer>();
-						//for each service point (ie for each line)
-						for(int i = 0; i<numServicePoints; i++) {
-							this.servicePoints.add(new QueueList<Customer>()); //initialize the given line as a Queue of customers
-						}
+
 						System.out.println("about to generate sequence");
 						this.eventQueue = generateCustomerSequence(numCustomers, maxEventStart, seed);
 
@@ -99,7 +94,7 @@ public abstract class BusinessSimulation {
 	 * @post the simulation has advanced 1 time step
 	 * @return true if the simulation is over, false otherwise
 	 */
-	abstract public void unique(int i);
+	abstract public boolean unique(int i);
 	abstract public void add(Customer c);
 
 
@@ -120,7 +115,7 @@ public abstract class BusinessSimulation {
 		if (servicePoints != null)  {
 
 			for (Queue<Customer> sp : servicePoints) {
-				str = str + "Service Point: " + sp.toString() + "\n";
+				str = str + "\nService Point: " + sp.toString() + "\n";
 			}
 		}
 		return str;
@@ -166,9 +161,9 @@ public abstract class BusinessSimulation {
 		if(multi) bs = new MultiQueue(numCustomers, numServicePoints, maxEventStart, seed);
 		else bs = new OneQueue(numCustomers, numServicePoints, maxEventStart, seed);
     //Print multiqueue for every time step
-    do{
-       bs.print();
-    } while(step(bs));
+    while(step(bs)){
+			bs.print();
+		};
 
 		String output;
 		if(multi) output = "Multiple Service-Point";
@@ -210,12 +205,18 @@ public abstract class BusinessSimulation {
 		for(int i = 0; i<bs.getServicePoints().size(); i++){
 			//if the line is not empty
       if(!bs.getServicePoints().get(i).isEmpty()){
-				bs.unique(i); //run operations unique to specific type of simulation
+				// bs.unique(i); //run operations unique to specific type of simulation
+				// //if line is still non-empty
+        // if(!bs.getServicePoints().get(i).isEmpty()) hasNext = true;
+				// else System.out.println("213, at time: " + bs.getTime())
+
+				//run operations unique to specific type of simulation
 				//if line is still non-empty
-        if(!bs.getServicePoints().get(i).isEmpty()) hasNext = true;
+				if(bs.unique(i)) hasNext = true;
+				else System.out.println("213, at time: " + bs.getTime());
 			}
 		}
-		//if all lines are empty
+		//if all lines are empty (and in onequeue, if no one is "being_served")
     if(!hasNext && bs.getEventQueue().isEmpty()){
       System.out.println("returning false at " + bs.getTime());
       return false;

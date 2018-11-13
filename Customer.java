@@ -26,8 +26,6 @@ public class Customer implements Comparable<Customer> {
 	public Customer(int eventTime, int serviceTime) {
 		this.eventTime = eventTime;
 		this.serviceTime = serviceTime;
-		this.serviceBegins = -1;
-		this.waitTime = -1;
 	 }
 
 	/**
@@ -107,9 +105,9 @@ public class Customer implements Comparable<Customer> {
 		*/
 	public String toString() {
 		String s = "";
-		if(serviceBegins!=-1) s+= ", service start time: " + getServiceBegins();
-		if(waitTime!=-1) s+= ", amount of time waited: " + getWaitTime();
-		return ("<Customer| event time: " + getEventTime() + ", service time: " + getServiceTime() + s + ">\n");
+		if(serviceBegins>-1) s+= ", service start time: " + getServiceBegins();
+		if(waitTime>-1) s+= ", amount of time waited: " + getWaitTime();
+		return ("\n<Customer| event time: " + getEventTime() + ", service time: " + getServiceTime() + s + ">");
 	}
 	/**
 		*Main method meant to test/debug this class

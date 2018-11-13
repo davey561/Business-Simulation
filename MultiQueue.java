@@ -13,6 +13,10 @@ public class MultiQueue extends BusinessSimulation {
     */
   public MultiQueue(int numCustomers, int numServicePoints, int maxEventStart, int seed) {
       super(numCustomers, numServicePoints, maxEventStart, seed);
+      //for each service point (ie for each line)
+      for(int i = 0; i<numServicePoints; i++) {
+        this.getServicePoints().add(new QueueList<Customer>()); //initialize the given line as a Queue of customers
+      }
   }
   /**
     * Performs the function unique to simulation of a store with multiple lines
@@ -21,7 +25,7 @@ public class MultiQueue extends BusinessSimulation {
       * if tellers are free, removed customers from lines to be served
     * @param i the line number that Business Simulation is currently looking at
     */
-  public void unique(int i){
+  public boolean unique(int i){
     Queue<Customer> line = servicePoints.get(i);
     //Remove a customer from line if they've been fully served
     //if that customer has been served fully:
@@ -36,6 +40,8 @@ public class MultiQueue extends BusinessSimulation {
         line.getFirst().setWaitTime();
       }
     }
+    if(line.size()>0) return true;
+    else return false;
   }
 
   /**
@@ -60,7 +66,7 @@ public class MultiQueue extends BusinessSimulation {
     //add the customer c to this line.
       //but first, determine whether they are the first to be added to this line. we have to indicate when their services will begin:
       if(min == 0){
-        c.setServiceBegins(getTime()+1);
+        c.setServiceBegins(getTime());
       } //Otherwise, start time is set when person in front of them in line finishes with their services
     servicePoints.get(best).add(c);
   }
