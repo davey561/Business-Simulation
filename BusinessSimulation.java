@@ -26,7 +26,7 @@ public abstract class BusinessSimulation {
 	protected int seed;
 	/* Used to bound the range of service times that Customers require */
 	public static final int MIN_SERVICE_TIME = 5; //TODO: set appropraitely
-	public static final int MAX_SERVICE_TIME = 50; //TODO: set appropriately
+	public static final int MAX_SERVICE_TIME = 20; //TODO: set appropriately
 
 	//keep track of when each line's first customer started being served.
   //protected int [] start_times; //Each index corresponds to a service point; each int is the time at which the customer currently being served in that line started being served
