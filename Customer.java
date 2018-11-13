@@ -27,6 +27,7 @@ public class Customer implements Comparable<Customer> {
 		this.eventTime = eventTime;
 		this.serviceTime = serviceTime;
 		this.serviceBegins = -1;
+		this.waitTime = -1;
 	 }
 
 	/**

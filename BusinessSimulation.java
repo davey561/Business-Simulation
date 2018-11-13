@@ -31,8 +31,8 @@ public abstract class BusinessSimulation {
 	public static final int MAX_SERVICE_TIME = 20; //TODO: set appropriately
 
 	//keep track of when each line's first customer started being served.
-  protected int [] start_times; //Each index corresponds to a service point; each int is the time at which the customer currently being served in that line started being served
-  protected int wait_time; //the sum of all wait times of the customers, to be divided by the total number of customers before returned
+  //protected int [] start_times; //Each index corresponds to a service point; each int is the time at which the customer currently being served in that line started being served
+  //protected int wait_time; //the sum of all wait times of the customers, to be divided by the total number of customers before returned
 
 	/**
 	 * Creates a BusinessSimulation.
@@ -57,7 +57,7 @@ public abstract class BusinessSimulation {
 
 
 						 //generate the queue of events. an event is a customer entering the store at a specific time
-						this.time = 0; //initialize time as 0
+						this.time = -1; //initialize time as -1 (first increment is time 0)
 						this.seed = seed;
 				}
 
@@ -167,7 +167,7 @@ public abstract class BusinessSimulation {
 		else bs = new OneQueue(numCustomers, numServicePoints, maxEventStart, seed);
     //Print multiqueue for every time step
     do{
-       //mq.print();
+       bs.print();
     } while(step(bs));
 
 		String output;
@@ -175,11 +175,11 @@ public abstract class BusinessSimulation {
 		else output = "Single Line";
 
 		//finding average wait time
-		int sum = 0;
+		double sum = 0;
 		for(int i = 0; i<getCustomerList().size(); i++){
 			sum+=getCustomerList().get(i).getWaitTime();
 		}
-		int ave= sum/numCustomers;
+		double ave= sum/ (double) numCustomers;
 
 	  System.out.println(output + " Simulation with " + numCustomers + " customers, " + numServicePoints + " lines, and time " + maxEventStart + " as the last time a customer can enter before store closes. \nTime = " + bs.getTime() + ". \nAverage wait time = " + ave + ".");
 	}
@@ -193,15 +193,17 @@ public abstract class BusinessSimulation {
     Customer temp;
     boolean hasNext;
 
+		bs.incrementTime(); //increment time
     //while earliest person is entering now
     // System.out.println("event time of current first customer: " +  eventQueue.getFirst().getEventTime());
-    while (!bs.eventQueue.isEmpty() && bs.eventQueue.getFirst().getEventTime()==bs.getTime()){
-      // System.out.println("in while loop, event time of current guy being examined: "+ eventQueue.getFirst().getEventTime());
+    while (!bs.eventQueue.isEmpty()&& (bs.eventQueue.getFirst().getEventTime()==bs.getTime())){
+      //System.out.println("in while loop, event time of current guy being examined: "+ bs.getEventQueue().getFirst().getEventTime());
       //Add the given customer to the event queue, using add() method internal to this class,
         //simultaneously remove that customer from the eventQueue
       // System.out.println("adding next person on event cue: " + eventQueue.getFirst().getEventTime() + ", servicetime: " + eventQueue.getFirst().getServiceTime());
-      bs.add(bs.getEventQueue().remove());
-    };
+			//if(bs.eventQueue.getFirst().getEventTime()==bs.getTime())
+      	bs.add(bs.getEventQueue().remove());
+    }
     hasNext = false;
 
 		//for every line of customers (ie for every service point)
@@ -209,7 +211,7 @@ public abstract class BusinessSimulation {
 			//if the line is not empty
       if(!bs.getServicePoints().get(i).isEmpty()){
 				bs.unique(i); //run operations unique to specific type of simulation
-				//if all line is still non-empty
+				//if line is still non-empty
         if(!bs.getServicePoints().get(i).isEmpty()) hasNext = true;
 			}
 		}
@@ -218,7 +220,6 @@ public abstract class BusinessSimulation {
       System.out.println("returning false at " + bs.getTime());
       return false;
     }
-    bs.incrementTime(); //increment time
     return true; //indicates that business simulation should continue (because there are potentially more customers that will need to be served)
 	}
 	public PriorityQueue<Customer> getEventQueue(){
@@ -232,12 +233,6 @@ public abstract class BusinessSimulation {
 	}
 	public int getSeed(){
 		return seed;
-	}
-	public int getWaitTime(){
-    return wait_time;
-  }
-	public int [] getStartTimes(){
-		return start_times;
 	}
 	public int getNumServicePoints(){
 		return numServicePoints;
