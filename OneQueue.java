@@ -8,6 +8,8 @@ import structure5.*;
 public class OneQueue extends BusinessSimulation {
   Vector<Customer> being_served = new Vector <Customer>(); //keeps track of customers currently being served
 
+//$ This data is also kept in the servicePoints vector of queues.
+
   /**
     * Constructor for onequeue
     * @param getNumCustomers the number of customers in the simulation

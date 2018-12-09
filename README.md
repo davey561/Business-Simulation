@@ -1,3 +1,10 @@
+# Lab 8 High-level Feedback
+ * Very nice work!
+ * You could have moved even more functionality into the BusinessSimulation class (-1)
+
+__Lab 8 Score: 25/26; Lab: 21/22; Questions: 4/4__
+__Reviewed by Bill L__
+
 We are the sole authors of all codes in this the classes: BusinessSimulation, Customer, OneQueue, MultiQueue.
 # Lab 8: Waiting in Line
 * BusinessSimulation is the central (abstract) class of the store simulation. It contains all of the code common to both types of simulations. Its main method runs the simulation, its step method increments time and calls on the necessary functions that are unique to each kind of simulations
